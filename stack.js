@@ -1,26 +1,46 @@
+import Node from './node';
+
 class Stack {
     constructor() {
-        this.items = [];
+        this.top = null;
     }
 
     push(item) {
-        this.items[this.items.length] = item;
-        return this;
+        let node = new Node(item);
+        if (!this.top) {
+            this.top = node;
+        } else {
+            node.next = this.top;
+            this.top = node;
+        }
     }
 
-    pop() {
-        if (this.items.length) {
-            this.items.splice(this.items.length - 1);
+    pop() {                     // return the deleted element
+        if (!this.top) {
+            throw new Error('Stack is empty.');
+        } else {
+            let deletedItem = this.top;
+            this.top = this.top.next;
+            return deletedItem.data;
         }
-        return this;
     }
 
     length() {
-        return this.items.length;
+        if (!this.top) {
+            throw new Error('Stack is empty.');
+        } else {
+            let current = this.top;
+            let count = 0;
+            while(current) {
+                current = current.next;
+                count ++;
+            }
+            return count;
+        }
     }
 
     isEmpty() {
-        if (this.items.length) {
+        if (this.top) {
             return false;
         } else {
             return true;
@@ -28,7 +48,7 @@ class Stack {
     }
 
     isFull() {
-        if (this.items.length) {
+        if (this.top) {
             return true;
         } else {
             return false;
@@ -36,26 +56,39 @@ class Stack {
     }
 
     peek() {
-        if (this.items.length) {
-            return this.items[this.items.length - 1];
+        if (this.top) {
+            return this.top;
+        } else {
+            throw new Error('Stack is empty.');
         }
     }
 
-    clear() {
-        this.items.length = 0;
-        return this;
+    search(item) {                             // true or false
+        if (!this.top) {
+            throw new Error('Stack is empty.');
+        } else {
+            let current = this.top;
+            while (current) {
+                if (current.data === item) {
+                    return true;
+                } else {
+                    current = current.next;
+                }
+            }
+        }
     }
 
-    printStack() {
-            if (!this.items.length) {
-                return 'The Stack is empty.'
-            } else {
-                let printStackString = '';
-                for (let i = 0; i < this.items.length; i++) {
-                    printStackString += `Element ${i + 1} is ${this.items[i]} \n`;
-                }
-                return printStackString;
-            }
+    reverse() {
+        let current = this.top;
+        let prev = null;
+        while (current) {
+            let next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+
+        this.top = prev;
     }
 }
 
